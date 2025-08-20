@@ -60,11 +60,15 @@ def draw_eye(canvas, center, pupil_offset, blink_amount: float, emotion: str):
     pupil_center = (int(center[0] + pupil_offset[0]), int(center[1] + pupil_offset[1]))
     if blink_amount < 0.98:  # hide pupil when almost fully closed
         # Dark blue iris (BGR) - outer ring slightly brighter than inner
-        cv2.circle(canvas, pupil_center, PUPIL_RADIUS, (139, 25, 10), -1, lineType=cv2.LINE_AA)  # outer dark blue
-        cv2.circle(canvas, pupil_center, int(PUPIL_RADIUS*0.55), (70, 10, 5), -1, lineType=cv2.LINE_AA)    # inner deeper blue
-        cv2.circle(canvas, pupil_center, int(PUPIL_RADIUS*0.25), (255, 255, 255), 4, lineType=cv2.LINE_AA)
-        highlight_center = (int(pupil_center[0] - PUPIL_RADIUS*0.4), int(pupil_center[1] - PUPIL_RADIUS*0.4))
-        cv2.circle(canvas, highlight_center, int(PUPIL_RADIUS*0.25), (255, 255, 255), -1, lineType=cv2.LINE_AA)
+        # Limbal ring (darker edge)
+        cv2.circle(canvas, pupil_center, PUPIL_RADIUS, (80, 40, 30), -1, lineType=cv2.LINE_AA)
+        # Iris color
+        cv2.circle(canvas, pupil_center, int(PUPIL_RADIUS*0.9), (220, 150, 80), -1, lineType=cv2.LINE_AA) # Bright blue
+        # Pupil
+        cv2.circle(canvas, pupil_center, int(PUPIL_RADIUS*0.45), (10, 10, 10), -1, lineType=cv2.LINE_AA)
+        # Highlight
+        highlight_center = (int(pupil_center[0] - PUPIL_RADIUS*0.3), int(pupil_center[1] - PUPIL_RADIUS*0.3))
+        cv2.circle(canvas, highlight_center, int(PUPIL_RADIUS*0.35), (255, 255, 255), -1, lineType=cv2.LINE_AA)
 
     # Emotion adjustments (eyelid shaping)
     # We'll modify blink_amount effective coverage and add partial lid positions.
@@ -154,7 +158,7 @@ try:
         pupil_offset_right *= (1 - SMOOTHING)
 
         canvas = np.zeros((WINDOW_H, WINDOW_W, 3), dtype=np.uint8)
-        canvas[:] = (25, 30, 40)
+        canvas[:] = (0, 0, 0)
 
         # Compute eye centers
         center_y = WINDOW_H // 2
